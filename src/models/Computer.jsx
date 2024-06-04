@@ -1,13 +1,23 @@
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 
 export function Computer(props) {
 	const group = useRef();
 	const { nodes, materials } = useGLTF("computer/scene.gltf");
+	const [direction, setDirection] = useState(1);
 
 	useFrame(() => {
-		group.current.rotation.y += 0.002; // Измените скорость вращения по вашему усмотрению
+		group.current.rotation.y += 0.002 * direction; // Измените скорость вращения по вашему усмотрению
+
+		// Проверяем, достигла ли модель определенного угла
+		if (
+			group.current.rotation.y >= Math.PI / 4 ||
+			group.current.rotation.y <= -Math.PI / 4
+		) {
+			// Инвертируем направление вращения
+			setDirection(direction * -1);
+		}
 	});
 
 	return (
